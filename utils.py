@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
 
-def read_data():
-    p = "./data/normalized.csv"
+def read_data(x, y, p="./data/normalized.csv"):
     df = pd.read_csv(p)
-    return df['RM'], df['PRICE']
+    return df[x], df[y]
 
 def da(y,y_p,x):
     return (y-y_p)*(-x)
