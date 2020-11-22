@@ -4,8 +4,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import random
 import numpy as np
 
-
-# rate = 0.2 # learning rate
+rate = 0.02 # learning rate
 def da(y, y_p,x):
     return (y-y_p)*(-x)
 
@@ -15,7 +14,7 @@ def db(y, y_p):
 def calc_loss(a,b,x,y):
     tmp = y - (a * x + b)
     tmp = tmp ** 2  # Square every element in the matrix
-    SSE = sum(tmp) / 2*len(x)# Take the average
+    SSE = sum(tmp) / (2*len(x)) # Take the average
     return SSE
 
 #draw all curve point
@@ -55,7 +54,7 @@ def get_batch_data(x, y, batch=3):
 # create simulated data
 # x = [30, 35, 37, 59, 70, 76, 88, 100]
 # y = [1100,	1423,	1377,	1800,	2304,	2588,	3495,	4839]
-a = np.loadtxt('./data/LR.txt')
+a = np.loadtxt('./Data/LR.txt')
 x = a[:, 1]
 y = a[:, 2]
 # Data normalization
@@ -82,7 +81,7 @@ plt.subplot(1, 2, 1)
 plt.contourf(ha, hb, hallSSE, 15, alpha=0.2, cmap=plt.cm.jet)
 C = plt.contour(ha, hb, hallSSE, 15, colors='blue')
 # plt.clabel(C, inline=True)
-plt.title('Adadelta')
+plt.title('RMSprop')
 plt.xlabel('opt param: a')
 plt.ylabel('opt param: b')
 
@@ -98,12 +97,12 @@ last_b = b
 
 theta = np.array([0, 0]).astype(np.float32)
 E_grad = np.array([0, 0]).astype(np.float32)
-E_theta = np.array([0, 0]).astype(np.float32)
+# E_theta = np.array([0, 0]).astype(np.float32)
 
-epsilon = 1e-1
-gamma = 0.99
+epsilon = 1e-2
+gamma = 0.9
 
-for step in range(1, 100):
+for step in range(1, 400):
     loss = 0
     all_da = 0
     all_db = 0
@@ -123,16 +122,16 @@ for step in range(1, 100):
     # draw fig.1 contour line
     plt.subplot(1, 2, 1)
     plt.scatter(a, b, s=5, color='blue')
-    plt.plot([last_a, a], [last_b, b], color='red', label="Adadelta")
+    plt.plot([last_a, a], [last_b, b], color='red', label="RMSprop")
 
     # draw fig.2 loss line
     all_loss.append(loss)
     all_step.append(step)
 
     plt.subplot(1, 2, 2)
-    plt.plot(all_step, all_loss, color='steelblue', label='Adadelta')
+    plt.plot(all_step, all_loss, color='steelblue', label='RMSprop')
 
-    plt.title('Adadelta')
+    plt.title('RMSprop')
     plt.xlabel("step")
     plt.ylabel("loss")
 
@@ -144,10 +143,10 @@ for step in range(1, 100):
     E_grad = gamma * E_grad + (1-gamma) * (all_d ** 2)
     rms_grad = np.sqrt(E_grad + epsilon)
 
-    E_theta = gamma * E_theta + (1-gamma) * (theta ** 2)
-    rms_theta = np.sqrt(E_theta + epsilon)
+    # E_theta = gamma * E_theta + (1-gamma) * (theta ** 2)
+    # rms_theta = np.sqrt(E_theta + epsilon)
 
-    theta = -(rms_theta / rms_grad) * all_d
+    theta = -( rate / rms_grad) * all_d
     [a, b] = [a, b] + theta
 
     if step % 1 == 0:
