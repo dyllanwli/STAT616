@@ -20,9 +20,9 @@ def calc_loss(a,b,x,y):
 
 #draw all curve point
 def draw_hill(x,y):
-    a = np.linspace(-20,20,100)
+    a = np.linspace(-15,15,100)
     # print(a)
-    b = np.linspace(-20,20,100)
+    b = np.linspace(-15,15,100)
     x = np.array(x)
     y = np.array(y)
 
@@ -73,14 +73,14 @@ for i in range(0, len(x)):
 
 # init a,b value
 a = 10.0
-b = -20.0
+b = -10.0
 fig = plt.figure(1)
 # fig.suptitle('Adagrad, learning rate: %.2f'%(rate), fontsize=15)
 
 # draw fig.1 contour line
 plt.subplot(1, 2, 1)
-plt.contourf(ha, hb, hallSSE, 15, alpha=0.2, cmap=plt.cm.jet)
-C = plt.contour(ha, hb, hallSSE, 15, colors='blue')
+plt.contourf(ha, hb, hallSSE, 10, alpha=0.2, cmap=plt.cm.jet)
+C = plt.contour(ha, hb, hallSSE, 10, colors='blue')
 # plt.clabel(C, inline=True)
 plt.title('Adadelta')
 plt.xlabel('opt param: a')
